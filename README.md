@@ -18,9 +18,12 @@ This template will help you to build an level editor mode as quickly as possible
 
 ## [How It Works]()
 
-1. Clone or download the repository
-2. Start the project, go inside the project settings (LEMB Settings) and select a Mode Widget.
-3. Open the level editor mode (default shortcut is Shift + 2).
+1. Choose the branch for the unreal version you want.
+2. Clone or download the repository
+3. Start the project.
+4. Optional: Create a new widget based on the LEMB Mode Widget.
+5. Go inside the project settings (LEMB Settings) and select a Mode Widget.
+6. Open the level editor mode (default shortcut is Shift + 2).
 
 ## Usage
 
