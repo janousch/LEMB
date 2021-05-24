@@ -7,6 +7,8 @@ LEMB/Saved/
 LEMB/Build/
 *_BuiltData.uasset
 *.sln
-*.dll
-*.pdb
 Build/
+ExampleProject/Intermediate/
+ExampleProject/Saved/
+ExampleProject/Config/SteamVRBindings/
+ExampleProject/Config/steamvr_ue_editor_app.json

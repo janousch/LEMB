@@ -1,0 +1,30 @@
+{
+    "FileVersion": 3,
+    "Version": 1,
+    "VersionName": "1.0.0",
+    "FriendlyName": "Level Editor Mode with Blueprints",
+    "Description": "Create your own level editor tool with blueprints!",
+    "Category": "Level Editor Mode",
+    "CreatedBy": "Ramon Janousch",
+    "CreatedByURL": "http://www.RamonJanousch.com",
+    "DocsURL": "",
+    "MarketplaceURL": "",
+    "SupportURL": "",
+    "EngineVersion": "4.25.0",
+    "CanContainContent": true,
+    "IsBetaVersion": false,
+    "Installed": false,
+    "Modules": [
+        {
+            "Name": "LevelEditorModeWithBlueprints",
+            "Type": "Editor",
+            "LoadingPhase": "Default"
+        }
+    ],
+    "Plugins": [
+        {
+            "Name": "EditorScriptingUtilities",
+            "Enabled": true
+        }
+    ]
+}
