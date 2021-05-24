@@ -32,7 +32,7 @@ This is an editor only plugin.
 
 You can change the mode widget class in the settings.
 <img src="./GithubResources/LEMB_ProjectSettings.jpg" align="left"
-     title="Texture Settings" width="1111" height="685">
+     title="Texture Settings" width="556" height="343">
 
 <br>
 <br>
