@@ -60,7 +60,8 @@ public class LevelEditorModeWithBlueprints : ModuleRules
                 "InteractiveToolsFramework",
                 "EditorInteractiveToolsFramework",
                 "EditorScriptingUtilities",
-				"Blutility"
+				"Blutility",
+				"DeveloperSettings"
             }
 			);
 		
