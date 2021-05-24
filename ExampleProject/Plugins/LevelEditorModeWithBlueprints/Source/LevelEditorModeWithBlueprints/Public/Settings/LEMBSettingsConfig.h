@@ -9,7 +9,7 @@
 class ULEMBModeWidget;
 
 // Plugin configuration page in Project Settings
-UCLASS(config=Game, defaultconfig)
+UCLASS(config=Editor, defaultconfig)
 class LEVELEDITORMODEWITHBLUEPRINTS_API ULEMBSettingsConfig : public UDeveloperSettings
 {
 	GENERATED_BODY()
@@ -18,17 +18,9 @@ public:
 
 	ULEMBSettingsConfig();
 
+	/* Mode Widget class for the Level Editor Tool. */
 	UPROPERTY(Config, EditAnywhere, Category = "Settings")
 	TSubclassOf<ULEMBModeWidget> WidgetClass;
-	
-	// Config ini file (without extension) that settings are saved to.
-	// Requires engine restart for changes to take effect.
-	UPROPERTY(Config, EditAnywhere, Category = Settings)
-	FString SettingsIniName = "LEMB";
-
-	// Config section that settings are saved to within the config ini file
-	UPROPERTY(Config, EditAnywhere, Category = Settings)
-	FString SettingsSectionName = "LEMB";
 
 protected:
 

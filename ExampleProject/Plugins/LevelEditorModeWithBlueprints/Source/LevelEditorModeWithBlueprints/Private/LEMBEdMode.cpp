@@ -2,7 +2,7 @@
 
 #include "LEMBEdMode.h"
 #include "LEMBEdModeToolkit.h"
-#include "Settings/LEMBModeWidget.h"
+#include "Widgets/LEMBModeWidget.h"
 #include <Toolkits/ToolkitManager.h>
 #include <EditorModeManager.h>
 #include <EditorViewportClient.h>
@@ -55,20 +55,6 @@ void FLEMBEdMode::Exit()
     FEdMode::Exit();
 }
 
-bool FLEMBEdMode::MouseMove(FEditorViewportClient* ViewportClient, FViewport* Viewport, int32 x,
-                           int32 y)
-{
-    // Runs twice each tick if the mouse is inside the viewport.
-
-    if (!ModeWidget.IsStale())
-    {
-        const FHitResult HitResult = ViewportTrace(ViewportClient, Viewport);
-        ModeWidget->ViewportMouseMove(HitResult);
-    }
-	
-    return FEdMode::MouseMove(ViewportClient, Viewport, x, y);
-}
-
 bool FLEMBEdMode::LostFocus(FEditorViewportClient* ViewportClient, FViewport* Viewport)
 {
     const bool bHandled = FEdMode::LostFocus(ViewportClient, Viewport);
@@ -79,9 +65,12 @@ bool FLEMBEdMode::LostFocus(FEditorViewportClient* ViewportClient, FViewport* Vi
 bool FLEMBEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewport* Viewport, FKey Key,
                           EInputEvent Event)
 {
-    if (!ModeWidget.IsStale())
+    if (HasValidModeWidget())
     {
-        ModeWidget->InputKey(Key, Event);
+        bool bHandled = false;
+        ModeWidget->InputKey(Key, Event, bHandled);
+
+        return bHandled;
     }
 
     return FEdMode::InputKey(ViewportClient, Viewport, Key, Event);
@@ -97,7 +86,7 @@ bool FLEMBEdMode::IsSelectionAllowed(AActor* InActor, bool bInSelection) const
 {
     // This function is called many times in a single tick.
 
-    if (!ModeWidget.IsStale())
+    if (HasValidModeWidget())
     {
         return ModeWidget->IsSelectionAllowed(InActor, bInSelection);
     }
@@ -110,26 +99,6 @@ bool FLEMBEdMode::UsesToolkits() const
     return true;
 }
 
-bool FLEMBEdMode::StartTracking(FEditorViewportClient* InViewportClient, FViewport* InViewport)
-{
-    if (!ModeWidget.IsStale())
-    {
-        ModeWidget->Viewport = InViewport;
-    }
-
-    return true;
-}
-
-bool FLEMBEdMode::EndTracking(FEditorViewportClient* InViewportClient, FViewport* InViewport)
-{
-    if (!ModeWidget.IsStale())
-    {
-        ModeWidget->Viewport = nullptr;
-    }
-	
-    return false;
-}
-
 void FLEMBEdMode::Render(const FSceneView* View, FViewport* Viewport, FPrimitiveDrawInterface* PDI)
 {
     // Runs every tick.
@@ -139,7 +108,7 @@ void FLEMBEdMode::Render(const FSceneView* View, FViewport* Viewport, FPrimitive
 
 bool FLEMBEdMode::Select(AActor* InActor, bool bInSelected)
 {
-    if (!ModeWidget.IsStale())
+    if (HasValidModeWidget())
     {
         ModeWidget->SelectActor(InActor, bInSelected);
     }
@@ -149,11 +118,10 @@ bool FLEMBEdMode::Select(AActor* InActor, bool bInSelected)
 
 void FLEMBEdMode::ActorSelectionChangeNotify()
 {
-    if (ModeWidget.IsStale())
+    if (HasValidModeWidget())
     {
-        return;
+        ModeWidget->ActorSelectionChangeNotify(GetFirstSelectedActorInstance());
     }
-    ModeWidget->ActorSelectionChangeNotify(GetFirstSelectedActorInstance());
 }
 
 bool FLEMBEdMode::ShouldDrawWidget() const
@@ -168,8 +136,9 @@ bool FLEMBEdMode::MouseEnter(FEditorViewportClient* ViewportClient, FViewport* V
 {
     // Called when the mouse enters the viewport.
 
-    if (!ModeWidget.IsStale())
+    if (HasValidModeWidget())
     {
+        ModeWidget->Viewport = Viewport;
         ModeWidget->ViewportMouseEnter();
     }
 	
@@ -180,12 +149,27 @@ bool FLEMBEdMode::MouseLeave(FEditorViewportClient* ViewportClient, FViewport* V
 {
     // Called when the mouse leaves the viewport.
 
-    if (!ModeWidget.IsStale())
+    if (HasValidModeWidget())
     {
+        ModeWidget->Viewport = nullptr;
         ModeWidget->ViewportMouseLeave();
     }
 	
     return false;
+}
+
+bool FLEMBEdMode::MouseMove(FEditorViewportClient* ViewportClient, FViewport* Viewport, int32 x,
+                            int32 y)
+{
+    // Runs twice each tick if the mouse is inside the viewport.
+
+    if (HasValidModeWidget())
+    {
+        const FHitResult HitResult = ViewportTrace(ViewportClient, Viewport);
+        ModeWidget->ViewportMouseMove(HitResult);
+    }
+
+    return FEdMode::MouseMove(ViewportClient, Viewport, x, y);
 }
 
 bool FLEMBEdMode::CapturedMouseMove(FEditorViewportClient* InViewportClient, FViewport* InViewport,
@@ -193,7 +177,7 @@ bool FLEMBEdMode::CapturedMouseMove(FEditorViewportClient* InViewportClient, FVi
 {
     // Called every when the mouse is inside the viewport and any mouse button is down and the mouse moved (multiple times per tick).
     
-    if (!ModeWidget.IsStale())
+    if (HasValidModeWidget())
     {
         const FHitResult HitResult = ViewportTrace(InViewportClient, InViewport);
         ModeWidget->ViewportCapturedMouseMove(HitResult);
@@ -226,7 +210,7 @@ void FLEMBEdMode::SetModeWidget(ULEMBModeWidget* NewModeWidget)
 FHitResult FLEMBEdMode::ViewportTrace(FEditorViewportClient* ViewportClient,
                                           FViewport* Viewport) const
 {
-    if (ModeWidget.IsStale())
+    if (!HasValidModeWidget())
     {
         return FHitResult();
     }
@@ -243,11 +227,12 @@ FHitResult FLEMBEdMode::ViewportTrace(FEditorViewportClient* ViewportClient,
         Viewport->GetMouseX(), Viewport->GetMouseY());
     const FVector TraceStart = MouseViewportRay.GetOrigin();
 	
-    FHitResult HitResult = ModeWidget->ViewportTrace(GetWorld(), TraceStart, MouseViewportRay.GetDirection());
+    FHitResult HitResult = ModeWidget->ViewportTrace(TraceStart, MouseViewportRay.GetDirection());
 
     return HitResult;
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 bool FLEMBEdMode::IsEditorInPlayMode()
 {
     if (GEditor->PlayWorld || GIsPlayInEditorWorld)
@@ -256,4 +241,18 @@ bool FLEMBEdMode::IsEditorInPlayMode()
     }
 
     return false;
+}
+
+bool FLEMBEdMode::HasValidModeWidget() const
+{
+    if (ModeWidget == nullptr)
+    {
+        return false;
+    }
+    if (ModeWidget.IsStale())
+    {
+        return false;
+    }
+
+    return true;
 }

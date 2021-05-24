@@ -5,11 +5,9 @@
 #include "LEMBEdModeToolkit.h"
 #include <CoreMinimal.h>
 #include <Widgets/DeclarativeSyntaxSupport.h>
-//#include <Styling/WidgetStyle.h>
 #include <Widgets/SCompoundWidget.h>
 
 class ULEMBModeWidget;
-//struct FPropertyAndParent;
 
 class LEVELEDITORMODEWITHBLUEPRINTS_API SLEMBSettings : public SCompoundWidget
 {
@@ -26,7 +24,7 @@ protected:
 	class FLEMBEdMode* GetEditorMode() const;
 
 private:
-
+	/* Construct a new mode widget. */
 	void ConstructModeWidget();
 	
 	TWeakObjectPtr<ULEMBModeWidget> ModeWidget;

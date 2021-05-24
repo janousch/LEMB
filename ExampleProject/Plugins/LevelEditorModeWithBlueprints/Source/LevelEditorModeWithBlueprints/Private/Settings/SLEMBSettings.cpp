@@ -3,7 +3,7 @@
 #include "Settings/SLEMBSettings.h"
 #include "LEMBEdMode.h"
 #include "Settings/LEMBSettingsConfig.h"
-#include "Settings/LEMBModeWidget.h"
+#include "Widgets/LEMBModeWidget.h"
 #include <SlateOptMacros.h>
 #include <Widgets/Layout/SScrollBox.h>
 #include <EditorModeManager.h>
@@ -21,7 +21,7 @@ void SLEMBSettings::Tick(const FGeometry& AllottedGeometry, const double InCurre
 {
     SCompoundWidget::Tick(AllottedGeometry, InCurrentTime, InDeltaTime);
 
-    if (ModeWidget.IsStale())
+    if (ModeWidget.IsStale() || ModeWidget == nullptr)
     {
         ConstructModeWidget();
     }

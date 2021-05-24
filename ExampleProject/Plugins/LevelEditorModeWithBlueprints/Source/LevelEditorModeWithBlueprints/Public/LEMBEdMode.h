@@ -40,10 +40,6 @@ public:
 
     virtual bool CapturedMouseMove(FEditorViewportClient* InViewportClient, FViewport* InViewport,
                                    int32 InMouseX, int32 InMouseY) override;
-    virtual bool StartTracking(FEditorViewportClient* InViewportClient,
-                               FViewport* InViewport) override;
-    virtual bool EndTracking(FEditorViewportClient* InViewportClient,
-                             FViewport* InViewport) override;
     virtual void Render(const FSceneView* View, FViewport* Viewport,
                         FPrimitiveDrawInterface* PDI) override;
     virtual bool Select(AActor* InActor, bool bInSelected) override;
@@ -64,4 +60,6 @@ private:
     FHitResult ViewportTrace(FEditorViewportClient* ViewportClient, FViewport* Viewport) const;
 
     bool IsEditorInPlayMode();
+
+    bool HasValidModeWidget() const;
 };

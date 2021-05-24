@@ -12,3 +12,14 @@ ExampleProject/Intermediate/
 ExampleProject/Saved/
 ExampleProject/Config/SteamVRBindings/
 ExampleProject/Config/steamvr_ue_editor_app.json
+ExampleProject/Plugins/LevelEditorModeWithBlueprints/Binaries/Win64/UE4Editor-LevelEditorModeWithBlueprints-0001.dll
+ExampleProject/Plugins/LevelEditorModeWithBlueprints/Binaries/Win64/UE4Editor-LevelEditorModeWithBlueprints-0001.pdb
+ExampleProject/Plugins/LevelEditorModeWithBlueprints/Binaries/Win64/UE4Editor-LevelEditorModeWithBlueprints-Win64-DebugGame.dll
+ExampleProject/Plugins/LevelEditorModeWithBlueprints/Binaries/Win64/UE4Editor-LevelEditorModeWithBlueprints-Win64-DebugGame.pdb
+ExampleProject/Plugins/LevelEditorModeWithBlueprints/Binaries/Win64/UE4Editor-Win64-DebugGame.modules
+ExampleProject/Binaries/Win64/UE4Editor-ExampleProject-4468.dll
+ExampleProject/Binaries/Win64/UE4Editor-ExampleProject-4468.pdb
+ExampleProject/Binaries/Win64/UE4Editor-ExampleProject-Win64-DebugGame.dll
+ExampleProject/Binaries/Win64/UE4Editor-ExampleProject-Win64-DebugGame.pdb
+ExampleProject/Binaries/Win64/UE4Editor-Win64-DebugGame.modules
+ExampleProject/.vs/
